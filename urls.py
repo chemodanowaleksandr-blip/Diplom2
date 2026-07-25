@@ -1,1 +1,1 @@
-BASE_URL = "https://stellarburgers.nomoreparties.site/api"
+BASE_URL = "https://stellarburgers.nomoreparties.site"
