@@ -11,7 +11,6 @@ class TestCreateUser:
         response = requests.post(f"{BASE_URL}/api/auth/register", json=user_data)
         assert response.status_code == 200
         assert response.json().get("success") is True
-        # Удаляем созданного юзера
         token = response.json().get("accessToken")
         if token:
             requests.delete(f"{BASE_URL}/api/auth/user", headers={"Authorization": token})
@@ -25,7 +24,7 @@ class TestCreateUser:
 
     @allure.story("Ошибка: создание пользователя при заполнении не всех обязательных полей")
     def test_create_user_missing_field_error(self, user_data):
-        user_data["email"] = ""  # Очищаем обязательное поле
+        user_data["email"] = ""
         response = requests.post(f"{BASE_URL}/api/auth/register", json=user_data)
         assert response.status_code == 403
         assert response.json().get("message") == "Email, password and name are required fields"
