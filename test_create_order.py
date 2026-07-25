@@ -9,7 +9,6 @@ class TestCreateOrder:
     @allure.story("Создание заказа с авторизацией и ингредиентами")
     def test_create_order_authorized_with_ingredients_success(self, created_user):
         _, token = created_user
-        # Хеш реального ингредиента (булки) с сервера Stellar Burgers
         ingredients_data = {"ingredients": ["61c0c5cd223ce5001b617f61"]}
         headers = {"Authorization": token}
         response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data, headers=headers)
@@ -38,4 +37,4 @@ class TestCreateOrder:
         ingredients_data = {"ingredients": ["invalid_hash_123"]}
         headers = {"Authorization": token}
         response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data, headers=headers)
-        assert response.status_code == 500  # Сервер падает с 500 на некорректный ID
+        assert response.status_code == 500
