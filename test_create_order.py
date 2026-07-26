@@ -1,6 +1,6 @@
 import requests
 import allure
-from urls import BASE_URL
+from data import Urls
 
 @allure.epic("Stellar Burgers API")
 @allure.feature("Создание заказа")
@@ -12,8 +12,7 @@ class TestCreateOrder:
         ingredients_data = {"ingredients": ["61c0c5d11d1f82001bda1f01"]}
         headers = {"Authorization": token}
         
-        # Убрали лишний /api из пути, так как он уже есть в BASE_URL
-        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        response = requests.post(Urls.ORDERS, json=ingredients_data, headers=headers)
         
         assert response.status_code == 200
         assert response.json().get("success") is True
@@ -22,8 +21,7 @@ class TestCreateOrder:
     def test_create_order_unauthorized_success(self):
         ingredients_data = {"ingredients": ["61c0c5d11d1f82001bda1f01"]}
         
-        # Исправили эндпоинт создания заказа для неавторизованного юзера
-        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data)
+        response = requests.post(Urls.ORDERS, json=ingredients_data)
         
         assert response.status_code == 200
         assert response.json().get("success") is True
@@ -34,7 +32,7 @@ class TestCreateOrder:
         ingredients_data = {"ingredients": []}
         headers = {"Authorization": token}
         
-        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        response = requests.post(Urls.ORDERS, json=ingredients_data, headers=headers)
         
         assert response.status_code == 400
         assert response.json().get("success") is False
@@ -45,6 +43,6 @@ class TestCreateOrder:
         ingredients_data = {"ingredients": ["invalid_hash_123"]}
         headers = {"Authorization": token}
         
-        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        response = requests.post(Urls.ORDERS, json=ingredients_data, headers=headers)
         
         assert response.status_code == 500
