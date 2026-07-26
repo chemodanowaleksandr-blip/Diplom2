@@ -1,6 +1,5 @@
 class Urls:
-    # Базовый URL для этого проекта (может быть nomoreparties или education-services, используйте ваш текущий)
-    BASE_URL = "https://education-services.ru"
+    BASE_URL = "https://nomoreparties.site"
     
     REGISTER = f"{BASE_URL}/api/auth/register"
     LOGIN = f"{BASE_URL}/api/auth/login"
