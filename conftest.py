@@ -6,9 +6,14 @@ from helpers import generate_user_data
 @pytest.fixture
 def created_user():
     payload = generate_user_data()
-    response = requests.post(Urls.REGISTER, json=payload)
     
-    # Если сервер забанил IP гитхаба, не пытаемся парсить пустой JSON
+    # Заголовки, чтобы сервер думал, что запрос отправлен из Chrome
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    
+    response = requests.post(Urls.REGISTER, json=payload, headers=headers)
+    
     if response.status_code == 429:
         token = None
     else:
@@ -17,5 +22,8 @@ def created_user():
     yield payload, token
     
     if token:
-        headers = {"Authorization": token}
-        requests.delete(Urls.USER, headers=headers)
+        delete_headers = {
+            "Authorization": token,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+        requests.delete(Urls.USER, headers=delete_headers)
