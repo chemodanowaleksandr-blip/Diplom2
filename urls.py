@@ -1,1 +1,1 @@
-BASE_URL = "https://stellarburgers.education-services.ru"
+BASE_URL = "https://education-services.ru"
