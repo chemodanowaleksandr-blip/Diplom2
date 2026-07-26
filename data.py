@@ -1,11 +1,12 @@
 class Urls:
-    BASE_URL = "https://nomoreparties.site"
+    # Базовый адрес учебного сервера из твоей доки
+    BASE_URL = "https://education-services.ru"
     
-    # Пользователь
+    # Эндпоинты пользователя
     REGISTER = f"{BASE_URL}/auth/register"
     LOGIN = f"{BASE_URL}/auth/login"
     USER = f"{BASE_URL}/auth/user"
     
-    # Заказы
+    # Эндпоинты заказов
     ORDERS = f"{BASE_URL}/orders"
     INGREDIENTS = f"{BASE_URL}/ingredients"
