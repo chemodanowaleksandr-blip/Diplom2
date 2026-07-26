@@ -1,18 +1,20 @@
 import pytest
 import requests
-from data import Urls
+from urls import BASE_URL
 from helpers import generate_user_data
 
 @pytest.fixture
 def created_user():
     """Фикстура создает уникального пользователя и удаляет его после теста"""
     payload = generate_user_data()
-    response = requests.post(Urls.REGISTER, json=payload)
+    
+    # Склеиваем BASE_URL с эндпоинтом регистрации
+    response = requests.post(f"{BASE_URL}/auth/register", json=payload)
     
     token = response.json().get("accessToken")
-    yield payload, response
+    yield payload, token
     
     # Очистка данных после теста
     if token:
         headers = {"Authorization": token}
-        requests.delete(Urls.USER, headers=headers)
+        requests.delete(f"{BASE_URL}/auth/user", headers=headers)
