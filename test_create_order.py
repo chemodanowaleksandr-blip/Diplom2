@@ -9,16 +9,22 @@ class TestCreateOrder:
     @allure.story("Создание заказа с авторизацией и ингредиентами")
     def test_create_order_authorized_with_ingredients_success(self, created_user):
         _, token = created_user
-        ingredients_data = {"ingredients": ["61c0c5cd223ce5001b617f61"]}
+        ingredients_data = {"ingredients": ["61c0c5d11d1f82001bda1f01"]}
         headers = {"Authorization": token}
-        response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data, headers=headers)
+        
+        # Убрали лишний /api из пути, так как он уже есть в BASE_URL
+        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        
         assert response.status_code == 200
         assert response.json().get("success") is True
 
     @allure.story("Создание заказа без авторизации")
     def test_create_order_unauthorized_success(self):
-        ingredients_data = {"ingredients": ["61c0c5cd223ce5001b617f61"]}
-        response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data)
+        ingredients_data = {"ingredients": ["61c0c5d11d1f82001bda1f01"]}
+        
+        # Исправили эндпоинт создания заказа для неавторизованного юзера
+        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data)
+        
         assert response.status_code == 200
         assert response.json().get("success") is True
 
@@ -27,14 +33,18 @@ class TestCreateOrder:
         _, token = created_user
         ingredients_data = {"ingredients": []}
         headers = {"Authorization": token}
-        response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data, headers=headers)
+        
+        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        
         assert response.status_code == 400
         assert response.json().get("success") is False
 
-    @allure.story("Ошибка: создание заказа с неверным хешем ингредиентов")
+    @allure.story("Ошибка: создание заказа с неверным хешем ингредиента")
     def test_create_order_invalid_ingredients_error(self, created_user):
         _, token = created_user
         ingredients_data = {"ingredients": ["invalid_hash_123"]}
         headers = {"Authorization": token}
-        response = requests.post(f"{BASE_URL}/api/orders", json=ingredients_data, headers=headers)
+        
+        response = requests.post(f"{BASE_URL}/orders", json=ingredients_data, headers=headers)
+        
         assert response.status_code == 500
