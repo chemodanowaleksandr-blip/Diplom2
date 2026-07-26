@@ -1,5 +1,5 @@
 class Urls:
-    BASE_URL = "https://education-services.ru"
+    BASE_URL = "https://nomoreparties.site"
     
     REGISTER = f"{BASE_URL}/api/auth/register"
     LOGIN = f"{BASE_URL}/api/auth/login"
