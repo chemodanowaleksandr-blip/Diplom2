@@ -4,7 +4,7 @@ import allure
 import sys
 import os
 
-# Этот кусочек кода научит Python видеть файлы в корне проекта
+# Добавляем корень проекта в пути поиска модулей
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from data import urls
