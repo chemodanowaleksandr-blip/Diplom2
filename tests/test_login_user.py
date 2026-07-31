@@ -1,12 +1,6 @@
 import pytest
 import requests
 import allure
-import sys
-import os
-
-# Добавляем корень проекта в пути поиска модулей
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from data import urls
 
 
