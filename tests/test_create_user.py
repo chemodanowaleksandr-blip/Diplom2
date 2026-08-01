@@ -12,12 +12,12 @@ urls = getattr(data, "urls", getattr(data, "Urls", data))
 class TestCreateUser:
 
     @allure.story("Ошибка: создание пользователя при заполнении не всех обязательных полей")
-    def test_create_user_missing_field_error(self, created_user):
-        user_payload, _ = created_user
+    def test_create_user_missing_field_error(self):
+        user_payload = generate_user_data()
 
         wrong_payload = user_payload.copy()
-        if "email" in wrong_payload:
-            del wrong_payload["email"]
+        # Избавляемся от if: безопасное удаление поля в одну строчку через pop
+        wrong_payload.pop("email", None)
 
         with allure.step("Отправка POST-запроса на регистрацию с неполными данными"):
             response = requests.post(urls.REGISTER, json=wrong_payload)
@@ -26,6 +26,23 @@ class TestCreateUser:
         assert response.json().get("message") == "Email, password and name are required fields"
 
     @allure.story("Успешное создание уникального пользователя")
-    def test_create_user_success(self, created_user):
-        _, token = created_user
-        assert token is not None
+    def test_create_user_success(self):
+        # Генерируем чистые данные для нового юзера
+        payload = generate_user_data()
+        
+        # Запрос выполняется явно в тесте, как просила Ирина
+        with allure.step("Отправка POST-запроса на регистрацию уникального пользователя"):
+            response = requests.post(urls.REGISTER, json=payload)
+
+        # Проверяем успешность создания
+        assert response.status_code == 200
+        assert response.json().get("success") is True
+        
+        # Получаем токен созданного юзера, чтобы вручную почистить базу в конце теста
+        token = response.json().get("accessToken")
+        
+        # Очистка данных (Teardown) прямо в конце теста, без костылей и фикстур
+        if token:
+            with allure.step("Удаление созданного пользователя для очистки базы данных"):
+                headers = {"Authorization": token}
+                requests.delete(urls.USER, headers=headers)
